@@ -33,7 +33,8 @@ enum eType {
 	CLIMBBING_WALL = 8, # 登れる壁.
 	ONEWAY_WALL_L = 9, # 一方通行カベ(左).
 	ONEWAY_WALL_R = 10, # 一方通行カベ(右).
-	
+	EXCLAMATION_SWITCH = 11, # びっくりスイッチ.
+	EXCLAMATION_BLOCK = 12, # びっくりブロック.
 }
 
 # --------------------------------------------------
@@ -130,8 +131,15 @@ static func replace_cell_from_world(pos:Vector2, atlas_coords:Vector2i, tile_lay
 	var grid_pos = world_to_grid(pos)
 	replace_cell(grid_pos, atlas_coords, tile_layer)
 
-## 床の種別を取得する.
-static func get_floor_type(world:Vector2) -> eType:
+## 床の種類を取得する.
+static func get_floor_type(grid:Vector2i) -> eType:
+	var ret = get_custom_data(grid, "type")
+	if ret == null:
+		return eType.NONE
+	return ret
+
+## 床の種別を取得する (ワールド座標指定).
+static func get_floor_type_from_world(world:Vector2) -> eType:
 	var ret = get_custom_data_from_world(world, "type")
 	if ret == null:
 		return eType.NONE

@@ -60,6 +60,7 @@ reset={
 2d_physics/layer_5="Shield"
 2d_physics/layer_6="Block"
 2d_physics/layer_7="Oneway"
+2d_physics/layer_8="Exclamation"
 
 [rendering]
 

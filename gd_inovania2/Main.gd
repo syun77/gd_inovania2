@@ -14,6 +14,7 @@ const BLOCK_OBJ = preload("res://src/gimmic/Block.tscn")
 const LADDER_OBJ = preload("res://src/gimmic/Ladder.tscn")
 const ONEWAY_FLOOR_OBJ = preload("res://src/gimmic/OnewayFloor.tscn")
 const ONEWAY_WALL_OBJ = preload("res://src/gimmic/OneWayWall.tscn")
+const EXCLAMATION_BLOCK_OBJ = preload("res://src/gimmic/ExclamationBlock.tscn")
 
 # -------------------------------------------
 # onready.
@@ -78,7 +79,7 @@ func _create_obj_from_tile() -> void:
 		j = Map.height - (j + 1)
 		for i in range(Map.width):
 			var pos = Map.grid_to_world(Vector2(i, j))
-			var type = Map.get_floor_type(pos)
+			var type = Map.get_floor_type_from_world(pos)
 			if type == Map.eType.NONE:
 				continue
 			
@@ -124,6 +125,11 @@ func _create_obj_from_tile() -> void:
 					_bg_layer.add_child(obj)
 					obj.setup(false) # 右向き.
 					Map.erase_cell_from_world(pos)
+					
+				Map.eType.EXCLAMATION_SWITCH:
+					# びっくりスイッチ.
+					_create_exclamation_block(i, j)
+					Map.erase_cell_from_world(pos)
 
 ## 上を調べてコリジョンがなければ一方通行床を置く.
 ## @note ハシゴの後ろに隠れている一方通行床がチラチラ見える不具合がある.
@@ -144,8 +150,57 @@ func _check_put_oneway(i:int, j:int) -> void:
 	# 重ねるのはハシゴの上 (一方通行床で置き換える).
 	Map.replace_cell_from_world(pos, Vector2i(4, 0))
 
+## びっくりスイッチを作る.
+func _create_exclamation_block(i:int, j:int) -> void:
+	var type = Map.eType.EXCLAMATION_BLOCK # びっくりブロックを探す処理.
+	var p = Vector2i(i, j)
+	# まずは下を調べる.
+	p.y += 1
+	if Map.get_floor_type(p) != type:
+		return # 下がびっくりブロックでなければ何もしない.
+	# 見つかったのタイルを消しておく.
+	Map.erase_cell(p)
+	
+	# びっくりブロックを生成.
+	var block = EXCLAMATION_BLOCK_OBJ.instantiate()
+	block.position = Map.grid_to_world(p)
+	
+	# 座標リスト.
+	var pos_list = _create_exclamation_block_list(p)
+	print(pos_list)
+	_bg_layer.add_child(block)
+	block.setup(pos_list)
 
-# カメラの更新.
+## びっくりブロックのリストを作る.
+func _create_exclamation_block_list(base:Vector2i) -> Array:
+	var type = Map.eType.EXCLAMATION_BLOCK # びっくりブロックを探す処理.
+	var ret = []
+	
+	var p = base # 基準座標をコピーして使う.
+	for idx in range(64): # 最大64としておく.
+		# 見つかったかどうか.
+		var found = false
+		# 上下左右を探す.
+		for dir in [Vector2i.LEFT, Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN]:
+			var p2 = p + dir
+			if Map.get_floor_type(p2) != type:
+				continue # びっくりブロックでなければ何もしない.
+				
+			# 見つかったのタイルを消しておく.
+			Map.erase_cell(p2)
+			ret.append(p2 - base) # 基準からの相対座標.
+			found = true
+			# 次の座標から調べる.
+			p = p2
+			break
+			
+		if found == false:
+			# おしまい.
+			break
+	
+	return ret
+
+## カメラの更新.
 func _update_camera(delta:float, is_warp:bool=false) -> void:
 	# カメラの注視点
 	var target = _player.position

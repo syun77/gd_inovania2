@@ -400,6 +400,7 @@ texture_region_size = Vector2i(64, 64)
 13:0/0/physics_layer_2/angular_velocity = 0.0
 13:0/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 13:0/0/physics_layer_3/angular_velocity = 0.0
+13:0/0/custom_data_0 = 9
 14:0/animation_columns = 1
 14:0/animation_speed = 4.0
 14:0/animation_frame_0/duration = 1.0
@@ -416,6 +417,7 @@ texture_region_size = Vector2i(64, 64)
 14:0/0/physics_layer_2/angular_velocity = 0.0
 14:0/0/physics_layer_3/linear_velocity = Vector2(0, 0)
 14:0/0/physics_layer_3/angular_velocity = 0.0
+14:0/0/custom_data_0 = 10
 
 [resource]
 tile_size = Vector2i(64, 64)

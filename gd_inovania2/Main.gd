@@ -13,6 +13,7 @@ extends Node2D
 const BLOCK_OBJ = preload("res://src/gimmic/Block.tscn")
 const LADDER_OBJ = preload("res://src/gimmic/Ladder.tscn")
 const ONEWAY_FLOOR_OBJ = preload("res://src/gimmic/OnewayFloor.tscn")
+const ONEWAY_WALL_OBJ = preload("res://src/gimmic/OneWayWall.tscn")
 
 # -------------------------------------------
 # onready.
@@ -107,6 +108,22 @@ func _create_obj_from_tile() -> void:
 					# 登り壁はそのままでも良さそう...
 					#Map.erase_cell_from_world(pos)
 					pass
+					
+				Map.eType.ONEWAY_WALL_L:
+					# 一方通行カベ(左).
+					var obj = ONEWAY_WALL_OBJ.instantiate()
+					obj.position = pos
+					_bg_layer.add_child(obj)
+					obj.setup(true)
+					Map.erase_cell_from_world(pos)
+					
+				Map.eType.ONEWAY_WALL_R:
+					# 一方通行カベ(右).
+					var obj = ONEWAY_WALL_OBJ.instantiate()
+					obj.position = pos
+					_bg_layer.add_child(obj)
+					obj.setup(false) # 右向き.
+					Map.erase_cell_from_world(pos)
 
 ## 上を調べてコリジョンがなければ一方通行床を置く.
 ## @note ハシゴの後ろに隠れている一方通行床がチラチラ見える不具合がある.

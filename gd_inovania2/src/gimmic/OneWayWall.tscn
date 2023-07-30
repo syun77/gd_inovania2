@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqlplcw5o6q45"]
+
+[ext_resource type="Texture2D" uid="uid://brflmxa0mts3i" path="res://assets/images/gimmick/oneway_wall.png" id="1_4prfs"]
+[ext_resource type="Script" path="res://src/gimmic/OneWayWall.gd" id="1_jh8r8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8ssia"]
+size = Vector2(60, 60)
+
+[node name="OneWayWall" type="StaticBody2D"]
+collision_layer = 2
+script = ExtResource("1_jh8r8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_4prfs")
+vframes = 4
+frame = 2
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-2, -2)
+rotation = -1.5708
+shape = SubResource("RectangleShape2D_8ssia")
+one_way_collision = true
+one_way_collision_margin = 2.0

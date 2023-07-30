@@ -31,6 +31,8 @@ enum eType {
 	BLOCK = 6, # ブロック.
 	LADDER = 7, # はしご.
 	CLIMBBING_WALL = 8, # 登れる壁.
+	ONEWAY_WALL_L = 9, # 一方通行カベ(左).
+	ONEWAY_WALL_R = 10, # 一方通行カベ(右).
 	
 }
 

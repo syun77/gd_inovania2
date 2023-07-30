@@ -12,6 +12,7 @@ script = ExtResource("1_8ifh4")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_r3sgy")
+hframes = 2
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

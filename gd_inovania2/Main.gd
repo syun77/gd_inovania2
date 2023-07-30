@@ -167,7 +167,6 @@ func _create_exclamation_block(i:int, j:int) -> void:
 	
 	# 座標リスト.
 	var pos_list = _create_exclamation_block_list(p)
-	print(pos_list)
 	_bg_layer.add_child(block)
 	block.setup(pos_list)
 

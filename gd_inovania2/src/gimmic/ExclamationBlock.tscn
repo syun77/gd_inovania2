@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://hfcjfcxbvhnn"]
+[gd_scene load_steps=7 format=3 uid="uid://hfcjfcxbvhnn"]
 
 [ext_resource type="Texture2D" uid="uid://ct2b37bl633r0" path="res://assets/images/gimmick/exclamation_block.png" id="1_bxrni"]
 [ext_resource type="Script" path="res://src/gimmic/ExclamationBlock.gd" id="1_ov478"]
 [ext_resource type="Texture2D" uid="uid://b13cvj3mblcgo" path="res://assets/images/gimmick/exclamation_switch.png" id="2_vgfen"]
+[ext_resource type="Theme" uid="uid://d01v3grce8ivc" path="res://assets/fonts/Xolonium-Regular.tres" id="4_x1b6o"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_my1x6"]
 size = Vector2(60, 60)
@@ -32,3 +33,21 @@ vframes = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ExclamationSwitch"]
 position = Vector2(-2, -44)
 shape = SubResource("RectangleShape2D_fmxrc")
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="LabelNumber" type="Label" parent="."]
+visible = false
+offset_left = -38.0
+offset_top = -31.0
+offset_right = 35.0
+offset_bottom = 28.0
+theme = ExtResource("4_x1b6o")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+text = "9"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="body_entered" from="ExclamationSwitch" to="." method="_on_exclamation_switch_body_entered"]
+[connection signal="body_exited" from="ExclamationSwitch" to="." method="_on_exclamation_switch_body_exited"]

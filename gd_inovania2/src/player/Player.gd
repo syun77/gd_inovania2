@@ -172,7 +172,7 @@ func _update_main(delta:float) -> void:
 
 	move_and_slide()
 	
-	if _is_landing() == false and is_on_floor():
+	if is_landing() == false and is_on_floor():
 		# 着地した瞬間.
 		_just_landing(true)
 	
@@ -182,7 +182,7 @@ func _update_main(delta:float) -> void:
 	# スケールアニメの更新
 	_update_jump_scale_anim(delta)
 	
-	if _is_landing():
+	if is_landing():
 		_set_fall_through(false) # 着地したら飛び降り終了.
 	
 	_update_collision_post()
@@ -613,7 +613,7 @@ func _update_move_state() -> void:
 				_just_landing(false)
 	
 ## 着地しているかどうか.
-func _is_landing() -> bool:
+func is_landing() -> bool:
 	return _move_state == eMoveState.LANDING
 	
 ## 空中かどうか.

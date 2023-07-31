@@ -15,6 +15,7 @@ const LADDER_OBJ = preload("res://src/gimmic/Ladder.tscn")
 const ONEWAY_FLOOR_OBJ = preload("res://src/gimmic/OnewayFloor.tscn")
 const ONEWAY_WALL_OBJ = preload("res://src/gimmic/OneWayWall.tscn")
 const EXCLAMATION_BLOCK_OBJ = preload("res://src/gimmic/ExclamationBlock.tscn")
+const FALLING_FLOOR_OBJ = preload("res://src/gimmic/FallingFloor.tscn")
 
 # -------------------------------------------
 # onready.
@@ -129,6 +130,13 @@ func _create_obj_from_tile() -> void:
 				Map.eType.EXCLAMATION_SWITCH:
 					# びっくりスイッチ.
 					_create_exclamation_block(i, j)
+					Map.erase_cell_from_world(pos)
+					
+				Map.eType.FALLING_FLOOR:
+					# 落下床.
+					var obj = FALLING_FLOOR_OBJ.instantiate()
+					obj.position = pos
+					_bg_layer.add_child(obj)
 					Map.erase_cell_from_world(pos)
 
 ## 上を調べてコリジョンがなければ一方通行床を置く.

@@ -35,6 +35,7 @@ enum eType {
 	ONEWAY_WALL_R = 10, # 一方通行カベ(右).
 	EXCLAMATION_SWITCH = 11, # びっくりスイッチ.
 	EXCLAMATION_BLOCK = 12, # びっくりブロック.
+	FALLING_FLOOR = 13, # 落下床.
 }
 
 # --------------------------------------------------

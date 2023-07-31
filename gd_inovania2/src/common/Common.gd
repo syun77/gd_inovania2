@@ -110,6 +110,30 @@ func update(delta:float) -> void:
 ## CanvasLayerを取得する.
 func get_layer(layer_name:String) -> CanvasLayer:
 	return _layers[layer_name]
+
+## プレイヤーを取得する.
+func get_player() -> Player:
+	return _player
+	
+## カメラを取得する.
+func get_camera() -> Camera2D:
+	return _camera
+
+## カメラの視野を取得する.
+func get_camera_rect() -> Rect2:
+	return _camera.get_viewport_rect()
+
+## カメラの中に入っているかどうか.
+func is_in_camera(pos:Vector2, size:float, expand_ratio:float=1.0) -> bool:
+	var rect1 = get_camera_rect()
+	rect1.position += _camera.position
+	rect1.position -= rect1.size/2 # 中央揃え.
+	var rect2 = Rect2(pos, Vector2(size, size))
+	rect1.size *= expand_ratio # カメラの範囲を拡張する.
+	rect1.size += rect2.size * 2
+	if rect1.intersects(rect2):
+		return true
+	return false
 	
 ## スロー再生係数.
 func get_slow_rate() -> float:

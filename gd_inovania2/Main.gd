@@ -29,6 +29,9 @@ const FALLING_FLOOR_OBJ = preload("res://src/gimmic/FallingFloor.tscn")
 @onready var _particle_layer = $ParticleLayer
 @onready var _ui_layer = $UILayer
 
+## デバッグ用.
+@onready var _dbg_label = $UILayer/DbgLabel
+
 # -------------------------------------------
 # var.
 # -------------------------------------------
@@ -242,3 +245,12 @@ func _update_debug() -> void:
 	if Input.is_action_just_pressed("reset"):
 		# リセット.
 		get_tree().change_scene_to_file("res://Main.tscn")
+	
+	_dbg_label.visible = true
+	var cnt = 0
+	for obj in _bg_layer.get_children():
+		# 落下床をカウントする.
+		if not obj is FallingFloor:
+			continue
+		cnt += 1
+	_dbg_label.text = "FallingFloor:%d"%cnt

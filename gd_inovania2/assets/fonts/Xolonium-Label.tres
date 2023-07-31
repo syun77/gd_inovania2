@@ -1,0 +1,9 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://bftt71gmloym3"]
+
+[ext_resource type="FontFile" uid="uid://csbm65h0kxlp5" path="res://assets/fonts/Xolonium-Regular.otf" id="1_sf0c6"]
+
+[resource]
+font = ExtResource("1_sf0c6")
+font_size = 32
+outline_size = 6
+outline_color = Color(0, 0, 0, 1)

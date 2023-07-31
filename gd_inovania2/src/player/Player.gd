@@ -213,7 +213,6 @@ func _just_landing(is_scale_anim:bool) -> void:
 		_jump_scale_timer = JUMP_SCALE_TIME
 	_jump_cnt = 0 # ジャンプ回数をリセット.
 	_dash_cnt = 0 # ダッシュ回数をリセット.
-
 	
 ## HP回復処理.
 func _update_recovery(delta:float) -> void:
@@ -518,6 +517,13 @@ func _update_collision_post() -> void:
 	_touch_tile = Map.eType.NONE # 処理するタイル.
 	for i in range(get_slide_collision_count()):
 		var col:KinematicCollision2D = get_slide_collision(i)
+		var collider = col.get_collider()
+		
+		if collider.has_method("stepped_on"):
+			# 踏みつけ関数があれば呼び出す.
+			# この方法は一方通行床限定 (上からしか衝突しない＝踏みつけた）.
+			collider.call("stepped_on", self)
+			
 		# 衝突位置.
 		var pos = col.get_position()
 		var v = Map.get_floor_type(pos)

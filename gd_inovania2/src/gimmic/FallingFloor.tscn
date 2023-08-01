@@ -1,20 +1,29 @@
-[gd_scene load_steps=4 format=3 uid="uid://djv5cix1b0x4t"]
+[gd_scene load_steps=5 format=3 uid="uid://djv5cix1b0x4t"]
 
 [ext_resource type="Script" path="res://src/gimmic/FallingFloor.gd" id="1_2djw7"]
-[ext_resource type="Texture2D" uid="uid://cy0bi8ymdl1ia" path="res://assets/images/gimmick/falling_floor.png" id="1_mf1dn"]
+[ext_resource type="Texture2D" uid="uid://1mvwp0u3njat" path="res://assets/images/gimmick/falling_floor.png" id="1_mf1dn"]
+[ext_resource type="Script" path="res://src/gimmic/FallingFloorBody.gd" id="2_kw7aa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_03xhk"]
 size = Vector2(60, 16)
 
-[node name="FallingFloor" type="CharacterBody2D"]
-collision_layer = 2
-platform_floor_layers = 4294901760
+[node name="FallingFloor" type="Node2D"]
 script = ExtResource("1_2djw7")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_mf1dn")
+hframes = 2
+frame = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="FallingFloorBody" type="CharacterBody2D" parent="."]
+collision_layer = 2
+script = ExtResource("2_kw7aa")
+
+[node name="Sprite2D" type="Sprite2D" parent="FallingFloorBody"]
+texture = ExtResource("1_mf1dn")
+hframes = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FallingFloorBody"]
 position = Vector2(-2, -24)
 shape = SubResource("RectangleShape2D_03xhk")
 one_way_collision = true

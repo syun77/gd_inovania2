@@ -16,6 +16,7 @@ const ONEWAY_FLOOR_OBJ = preload("res://src/gimmic/OnewayFloor.tscn")
 const ONEWAY_WALL_OBJ = preload("res://src/gimmic/OneWayWall.tscn")
 const EXCLAMATION_BLOCK_OBJ = preload("res://src/gimmic/ExclamationBlock.tscn")
 const FALLING_FLOOR_OBJ = preload("res://src/gimmic/FallingFloor.tscn")
+const VORTEX_OBJ = preload("res://src/gimmic/Vortex.tscn")
 
 # -------------------------------------------
 # onready.
@@ -144,8 +145,9 @@ func _create_obj_from_tile() -> void:
 					
 				Map.eType.VORTEX_WARP:
 					# ワープ渦巻き.
-					_create_vortex_warp(i, j)
+					# 終端判定があるので先に消しておく.
 					Map.erase_cell_from_world(pos)
+					_create_vortex_warp(i, j)
 
 ## 上を調べてコリジョンがなければ一方通行床を置く.
 ## @note ハシゴの後ろに隠れている一方通行床がチラチラ見える不具合がある.
@@ -207,7 +209,7 @@ func _create_passage_list(base:Vector2i, search_type:int, end_point_type:int=-1)
 				is_end = true
 				# 終端座標を結果に含めたいのでbreakしない.
 				# break
-			if type != search_type:
+			elif type != search_type:
 				continue # 検索対象のタイルでない.
 				
 			# 見つかったタイルを消しておく.
@@ -216,6 +218,7 @@ func _create_passage_list(base:Vector2i, search_type:int, end_point_type:int=-1)
 			found = true
 			# 次の座標から調べる.
 			p = p2
+			# 1方向だけ見つかれば良いのでbreak.
 			break
 			
 		if is_end:
@@ -229,7 +232,33 @@ func _create_passage_list(base:Vector2i, search_type:int, end_point_type:int=-1)
 	
 ## ワープ渦巻きの経路を作る.
 func _create_vortex_warp(i:int, j:int) -> void:
-	pass
+	var search_type = Map.eType.VORTEX_PASSAGE # 渦巻き通路を探す処理.
+	var end_type = Map.eType.VORTEX_WARP # ワープ渦巻きがゴール.
+	var p = Vector2i(i, j)
+	
+	# ワープ渦巻きを生成.
+	var vortex1 = VORTEX_OBJ.instantiate()
+	
+	# 座標リスト.
+	var pos_list = _create_passage_list(p, search_type, end_type)
+	print(pos_list)
+	_bg_layer.add_child(vortex1)
+	vortex1.setup(p, pos_list, -8)
+	
+	# 終端用のワープ渦巻きを作っておく.
+	var pos_list2 = pos_list.duplicate() # 複製.
+	# 終端を取得.
+	var end_pos = pos_list2.pop_back()
+	# 終端が開始.
+	var p2 = p + end_pos
+	var vortex2 = VORTEX_OBJ.instantiate()
+	# 逆順にする.
+	pos_list2.reverse()
+	pos_list2 = pos_list2.map(func(a): return a-end_pos) # end_pos基準に変換.
+	pos_list2.append(-end_pos) # 終端はこれで良い.
+	print(pos_list2)
+	_bg_layer.add_child(vortex2)
+	vortex2.setup(p2, pos_list2, 8)
 
 ## カメラの更新.
 func _update_camera(delta:float, is_warp:bool=false) -> void:

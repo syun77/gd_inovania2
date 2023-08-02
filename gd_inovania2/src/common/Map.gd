@@ -36,6 +36,8 @@ enum eType {
 	EXCLAMATION_SWITCH = 11, # びっくりスイッチ.
 	EXCLAMATION_BLOCK = 12, # びっくりブロック.
 	FALLING_FLOOR = 13, # 落下床.
+	VORTEX_WARP = 14, # ワープ渦巻き.
+	VORTEX_PASSAGE = 15, # ワープ移動経路.
 }
 
 # --------------------------------------------------

@@ -141,6 +141,11 @@ func _create_obj_from_tile() -> void:
 					obj.position = pos
 					_bg_layer.add_child(obj)
 					Map.erase_cell_from_world(pos)
+					
+				Map.eType.VORTEX_WARP:
+					# ワープ渦巻き.
+					_create_vortex_warp(i, j)
+					Map.erase_cell_from_world(pos)
 
 ## 上を調べてコリジョンがなければ一方通行床を置く.
 ## @note ハシゴの後ろに隠れている一方通行床がチラチラ見える不具合がある.
@@ -177,26 +182,35 @@ func _create_exclamation_block(i:int, j:int) -> void:
 	block.position = Map.grid_to_world(p)
 	
 	# 座標リスト.
-	var pos_list = _create_exclamation_block_list(p)
+	var pos_list = _create_passage_list(p, Map.eType.EXCLAMATION_BLOCK)
 	_bg_layer.add_child(block)
 	block.setup(pos_list)
 
-## びっくりブロックのリストを作る.
-func _create_exclamation_block_list(base:Vector2i) -> Array:
-	var type = Map.eType.EXCLAMATION_BLOCK # びっくりブロックを探す処理.
+## 経路リストを作る.
+## @param base 開始位置.
+## @param search_type 経路とみなすタイル.
+## @param end_point_type 終端とするタイル.
+func _create_passage_list(base:Vector2i, search_type:int, end_point_type:int=-1) -> Array:
 	var ret = []
 	
 	var p = base # 基準座標をコピーして使う.
 	for idx in range(64): # 最大64としておく.
 		# 見つかったかどうか.
 		var found = false
+		var is_end = false # 終了. 
 		# 上下左右を探す.
 		for dir in [Vector2i.LEFT, Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN]:
 			var p2 = p + dir
-			if Map.get_floor_type(p2) != type:
-				continue # びっくりブロックでなければ何もしない.
+			var type = Map.get_floor_type(p2)
+			if type == end_point_type:
+				# 終端タイル.
+				is_end = true
+				# 終端座標を結果に含めたいのでbreakしない.
+				# break
+			if type != search_type:
+				continue # 検索対象のタイルでない.
 				
-			# 見つかったのタイルを消しておく.
+			# 見つかったタイルを消しておく.
 			Map.erase_cell(p2)
 			ret.append(p2 - base) # 基準からの相対座標.
 			found = true
@@ -204,11 +218,18 @@ func _create_exclamation_block_list(base:Vector2i) -> Array:
 			p = p2
 			break
 			
+		if is_end:
+			# おしまい.
+			break
 		if found == false:
 			# おしまい.
 			break
 	
 	return ret
+	
+## ワープ渦巻きの経路を作る.
+func _create_vortex_warp(i:int, j:int) -> void:
+	pass
 
 ## カメラの更新.
 func _update_camera(delta:float, is_warp:bool=false) -> void:

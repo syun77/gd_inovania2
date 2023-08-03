@@ -38,6 +38,7 @@ enum eMoveState {
 	AIR, # 空中.
 	GRABBING_LADDER, # はしごに掴まっている
 	CLIMBING_WALL, # 壁登り中.
+	WARP, # ワープ移動中.
 }
 
 ## ジャンプスケール.
@@ -104,6 +105,8 @@ var _timer_dash = 0.0
 var _dash_direction := Vector2.ZERO
 ## シールド.
 var _shield:Shield = null
+## ワープ座標リスト.
+var _warp_pos_list = []
 
 # ---------------------------------
 # public functions.
@@ -115,6 +118,14 @@ func start() -> void:
 ## 死亡したかどうか.
 func is_dead() -> bool:
 	return _state == eState.DEAD
+	
+## ワープ移動開始.
+func start_warp(pos_list:Array) -> void:
+	if _move_state == eMoveState.WARP:
+		return # すでにワープ中なら何もしない.
+	# すでに複製されているのでそのままコピーで良い.
+	_warp_pos_list = pos_list
+	_move_state = eMoveState.WARP
 
 ## 更新.
 func update(delta: float) -> void:
@@ -177,7 +188,7 @@ func _update_main(delta:float) -> void:
 		_just_landing(true)
 	
 	# 移動状態の更新.
-	_update_move_state()
+	_update_move_state(delta)
 	
 	# スケールアニメの更新
 	_update_jump_scale_anim(delta)
@@ -401,6 +412,10 @@ func _start_dash() -> void:
 ## ダッシュ中かどうか.
 func _is_dash() -> bool:
 	return _timer_dash > 0.0
+	
+## ワープ中かどうか.
+func _is_warp() -> bool:
+	return _move_state == eMoveState.WARP
 
 ## シールド表示中かどうか.
 func _is_shield() -> bool:
@@ -583,7 +598,7 @@ func _can_grab_ladder() -> bool:
 	return _ladder_count > 0
 	
 # 移動状態の更新.
-func _update_move_state() -> void:
+func _update_move_state(delta:float) -> void:
 	match _move_state:
 		eMoveState.GRABBING_LADDER:
 			if _can_grab_ladder() == false:
@@ -608,6 +623,17 @@ func _update_move_state() -> void:
 		eMoveState.LANDING:
 			if is_on_floor() == false:
 				_move_state = eMoveState.AIR
+		eMoveState.WARP:
+			# ワールド座標に変換する.
+			var target = Map.grid_to_world(_warp_pos_list[0])
+			target.y += Map.get_tile_size()/2 # プレイヤー基準座標が足元なので調整.
+			var d = (target - position)
+			position += d * 0.8
+			velocity = Vector2.ZERO
+			if d.length() < 1:
+				_warp_pos_list.pop_front()
+				if _warp_pos_list.size() == 0:
+					_move_state = eMoveState.AIR
 	
 	if _is_grabbing_ladder() == false:
 		# はしごチェック.
@@ -681,6 +707,8 @@ func _can_climb(up_down:float) -> bool:
 func _is_add_gravity() -> bool:
 	if _is_dash():
 		return false # ダッシュ中は重力の影響を受けない.
+	if _is_warp():
+		return false # ワープ中は重力の影響を受けない.
 	
 	match _move_state:
 		eMoveState.GRABBING_LADDER, eMoveState.CLIMBING_WALL:

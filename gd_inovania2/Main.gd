@@ -241,6 +241,7 @@ func _create_vortex_warp(i:int, j:int) -> void:
 	
 	# 座標リスト.
 	var pos_list = _create_passage_list(p, search_type, end_type)
+	pos_list.push_front(Vector2i.ZERO) # 開始地点を入れておく.
 	print(pos_list)
 	_bg_layer.add_child(vortex1)
 	vortex1.setup(p, pos_list, -8)
@@ -255,7 +256,7 @@ func _create_vortex_warp(i:int, j:int) -> void:
 	# 逆順にする.
 	pos_list2.reverse()
 	pos_list2 = pos_list2.map(func(a): return a-end_pos) # end_pos基準に変換.
-	pos_list2.append(-end_pos) # 終端はこれで良い.
+	#pos_list2.append(-end_pos) # 終端はこれで良い.
 	print(pos_list2)
 	_bg_layer.add_child(vortex2)
 	vortex2.setup(p2, pos_list2, 8)

@@ -87,4 +87,9 @@ func _on_body_entered(body: Node2D) -> void:
 	var player = body as Player
 	# 渦巻きからの相対なので絶対座標に置き換える.
 	var p_list = _pos_list.map(func(a): return a + _grid_pos)
+	# 末尾に飛び出す先を指定する.
+	#var b = p_list.pop_back()
+	#var a = p_list.pop_back()
+	#var c = b + (b - a)
+	#p_list.append_array([a, b, c])
 	player.start_warp(p_list)

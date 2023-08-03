@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/gimmic/Vortex.gd" id="1_kx5nv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j8coh"]
-size = Vector2(64, 64)
+size = Vector2(16, 16)
 
 [node name="Vortex" type="Area2D"]
 position = Vector2(64, 64)

@@ -38,6 +38,7 @@ enum eType {
 	FALLING_FLOOR = 13, # 落下床.
 	VORTEX_WARP = 14, # ワープ渦巻き.
 	VORTEX_PASSAGE = 15, # ワープ移動経路.
+	SPRING_FLOOR = 16, # バネ床.
 }
 
 # --------------------------------------------------

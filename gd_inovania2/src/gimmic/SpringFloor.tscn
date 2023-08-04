@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://diijbqk7leofo"]
+
+[ext_resource type="Script" path="res://src/gimmic/SpringFloor.gd" id="1_ng8el"]
+[ext_resource type="Texture2D" uid="uid://136kda0wd04e" path="res://assets/images/gimmick/spring_floor.png" id="2_qex1m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e8ee5"]
+size = Vector2(64, 64)
+
+[node name="SpringFloor" type="Area2D"]
+collision_layer = 512
+gravity_point_center = Vector2(0, -1)
+gravity_direction = Vector2(0, -1)
+linear_damp = 100.0
+script = ExtResource("1_ng8el")
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_qex1m")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_e8ee5")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

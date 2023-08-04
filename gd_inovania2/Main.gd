@@ -17,6 +17,7 @@ const ONEWAY_WALL_OBJ = preload("res://src/gimmic/OneWayWall.tscn")
 const EXCLAMATION_BLOCK_OBJ = preload("res://src/gimmic/ExclamationBlock.tscn")
 const FALLING_FLOOR_OBJ = preload("res://src/gimmic/FallingFloor.tscn")
 const VORTEX_OBJ = preload("res://src/gimmic/Vortex.tscn")
+const SPRING_FLOOR_OBJ = preload("res://src/gimmic/SpringFloor.tscn")
 
 # -------------------------------------------
 # onready.
@@ -148,6 +149,13 @@ func _create_obj_from_tile() -> void:
 					# 終端判定があるので先に消しておく.
 					Map.erase_cell_from_world(pos)
 					_create_vortex_warp(i, j)
+					
+				Map.eType.SPRING_FLOOR:
+					# バネ床.
+					var obj = SPRING_FLOOR_OBJ.instantiate()
+					obj.position = pos
+					_bg_layer.add_child(obj)
+					Map.erase_cell_from_world(pos)
 
 ## 上を調べてコリジョンがなければ一方通行床を置く.
 ## @note ハシゴの後ろに隠れている一方通行床がチラチラ見える不具合がある.
@@ -242,7 +250,7 @@ func _create_vortex_warp(i:int, j:int) -> void:
 	# 座標リスト.
 	var pos_list = _create_passage_list(p, search_type, end_type)
 	pos_list.push_front(Vector2i.ZERO) # 開始地点を入れておく.
-	print(pos_list)
+	#print(pos_list)
 	_bg_layer.add_child(vortex1)
 	vortex1.setup(p, pos_list, -8)
 	
@@ -256,8 +264,7 @@ func _create_vortex_warp(i:int, j:int) -> void:
 	# 逆順にする.
 	pos_list2.reverse()
 	pos_list2 = pos_list2.map(func(a): return a-end_pos) # end_pos基準に変換.
-	#pos_list2.append(-end_pos) # 終端はこれで良い.
-	print(pos_list2)
+	#print(pos_list2)
 	_bg_layer.add_child(vortex2)
 	vortex2.setup(p2, pos_list2, 8)
 

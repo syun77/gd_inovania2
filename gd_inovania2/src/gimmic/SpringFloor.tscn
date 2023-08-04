@@ -15,7 +15,9 @@ script = ExtResource("1_ng8el")
 metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 32)
 texture = ExtResource("2_qex1m")
+offset = Vector2(0, -32)
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

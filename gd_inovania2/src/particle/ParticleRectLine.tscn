@@ -1,12 +1,12 @@
 [gd_scene load_steps=4 format=3 uid="uid://bbkdy6ge3ols5"]
 
-[ext_resource type="Texture2D" uid="uid://6ex4wtckfxcs" path="res://assets/images/particle/rectline.png" id="1_vuy6n"]
+[ext_resource type="Texture2D" uid="uid://y77b7pumucvx" path="res://assets/images/particle/rectline.png" id="1_vuy6n"]
 [ext_resource type="Script" path="res://src/particle/ParticleRectLine.gd" id="2_qjb4p"]
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_uub24"]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_uu8t4"]
 blend_mode = 1
 
 [node name="ParticleRectLine" type="Sprite2D"]
-material = SubResource("CanvasItemMaterial_uub24")
+material = SubResource("CanvasItemMaterial_uu8t4")
 texture = ExtResource("1_vuy6n")
 script = ExtResource("2_qjb4p")

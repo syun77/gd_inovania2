@@ -27,7 +27,7 @@ var _state = eState.STAND_BY
 # public functions.
 # ---------------------------------------------
 ## 上に何か乗ったときに開始する処理.
-func stepped_on(body:CharacterBody2D) -> void:
+func stepped_on(_body:CharacterBody2D) -> void:
 	if _state == eState.STAND_BY:
 		# 落下開始.
 		_state = eState.FALLING

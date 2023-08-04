@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bqlplcw5o6q45"]
 
-[ext_resource type="Texture2D" uid="uid://brflmxa0mts3i" path="res://assets/images/gimmick/oneway_wall.png" id="1_4prfs"]
+[ext_resource type="Texture2D" uid="uid://dbepsej3nw5r1" path="res://assets/images/gimmick/oneway_wall.png" id="1_4prfs"]
 [ext_resource type="Script" path="res://src/gimmic/OneWayWall.gd" id="1_jh8r8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8ssia"]

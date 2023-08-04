@@ -99,8 +99,6 @@ func _ready() -> void:
 
 ## 更新.
 func _physics_process(delta: float) -> void:
-	delta *= Common.get_slow_rate()
-
 	_update(delta)
 	
 	if is_end():

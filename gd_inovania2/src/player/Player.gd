@@ -39,6 +39,7 @@ enum eMoveState {
 	GRABBING_LADDER, # はしごに掴まっている
 	CLIMBING_WALL, # 壁登り中.
 	WARP, # ワープ移動中.
+	SPRING, # バネ移動中.
 }
 
 ## ジャンプスケール.
@@ -126,6 +127,18 @@ func start_warp(pos_list:Array) -> void:
 	# すでに複製されているのでそのままコピーで良い.
 	_warp_pos_list = pos_list
 	_move_state = eMoveState.WARP
+	
+## バネ床開始.
+func start_spring() -> void:
+	if _move_state == eMoveState.SPRING:
+		return # すでに開始していたら何もしない.
+	_move_state = eMoveState.SPRING
+	
+## バネ床終了.
+func end_sprint() -> void:
+	if _move_state != eMoveState.SPRING:
+		return # すでに終了していたら何もしない.
+	_move_state = eMoveState.AIR
 
 ## 更新.
 func update(delta: float) -> void:
@@ -338,6 +351,10 @@ func _check_jump() -> bool:
 	if _is_climbing_wall():
 		# 壁登り中もジャンプできる.
 		return true
+		
+	if _is_spring():
+		# バネ床中はジャンプできない.
+		return false
 	
 	if _jump_cnt == 0:
 		if is_on_floor() == false:
@@ -598,7 +615,7 @@ func _can_grab_ladder() -> bool:
 	return _ladder_count > 0
 	
 # 移動状態の更新.
-func _update_move_state(delta:float) -> void:
+func _update_move_state(_delta:float) -> void:
 	match _move_state:
 		eMoveState.GRABBING_LADDER:
 			if _can_grab_ladder() == false:
@@ -626,7 +643,7 @@ func _update_move_state(delta:float) -> void:
 		eMoveState.WARP:
 			# ワールド座標に変換する.
 			var target = Map.grid_to_world(_warp_pos_list[0])
-			target.y += Map.get_tile_size()/2 # プレイヤー基準座標が足元なので調整.
+			target.y += Map.get_tile_size() / 2.0 # プレイヤー基準座標が足元なので調整.
 			var d = (target - position)
 			position += d * 0.8
 			velocity = Vector2.ZERO
@@ -634,6 +651,9 @@ func _update_move_state(delta:float) -> void:
 				_warp_pos_list.pop_front()
 				if _warp_pos_list.size() == 0:
 					_move_state = eMoveState.AIR
+		eMoveState.SPRING:
+			# バネ床状態.
+			pass
 	
 	if _is_grabbing_ladder() == false:
 		# はしごチェック.
@@ -702,6 +722,10 @@ func _can_climb(up_down:float) -> bool:
 			# 下に何もない場合は移動不可.
 			return false
 	return true
+
+## バネ床状態かどうか.
+func _is_spring() -> bool:
+	return _move_state == eMoveState.SPRING
 
 ## 重力の影響を受ける移動状態かどうか.
 func _is_add_gravity() -> bool:

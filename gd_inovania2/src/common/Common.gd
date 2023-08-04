@@ -6,8 +6,11 @@ extends Node
 # ----------------------------------------
 # consts
 # ----------------------------------------
-# 同時再生可能なサウンドの数.
+## 同時再生可能なサウンドの数.
 const MAX_SOUND = 8
+
+## 1フレームあたりの経過時間.
+const FPS_RATE = 1.0 / 60.0
 
 ## コリジョンレイヤー.
 enum eCollisionLayer {
@@ -48,6 +51,7 @@ var _snd_tbl = {
 }
 
 var _slow_timer = 0.0 # スロータイマー.
+var _slow_rate = 1.0 # スロー時の経過時間倍率.
 var _hit_stop_timer = 0.0 # ヒットストップタイマー.
 
 ## 画面揺れ.
@@ -135,13 +139,20 @@ func is_in_camera(pos:Vector2, size:float, expand_ratio:float=1.0) -> bool:
 		return true
 	return false
 	
+## スロー開始.
+func start_slow(time:float, rate:float) -> void:
+	_slow_timer = time
+	_slow_rate = rate
+
 ## スロー再生係数.
 func get_slow_rate() -> float:
+	if _slow_timer > 0:
+		return _slow_rate
 	return 1.0
 	
 ## ヒットストップ開始.
 func start_hit_stop(frame:int=3) -> void:
-	_hit_stop_timer = 0.01666 * frame # 60fpsと想定.
+	_hit_stop_timer = FPS_RATE * frame
 
 ## ヒットストップ中かどうか.
 func is_hit_stop() -> bool:

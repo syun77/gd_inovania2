@@ -1,6 +1,6 @@
 [gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://bftt71gmloym3"]
 
-[ext_resource type="FontFile" uid="uid://csbm65h0kxlp5" path="res://assets/fonts/Xolonium-Regular.otf" id="1_sf0c6"]
+[ext_resource type="FontFile" uid="uid://djua62pc6ipr7" path="res://assets/fonts/Xolonium-Regular.otf" id="1_sf0c6"]
 
 [resource]
 font = ExtResource("1_sf0c6")

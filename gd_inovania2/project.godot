@@ -61,6 +61,7 @@ reset={
 2d_physics/layer_7="Oneway"
 2d_physics/layer_8="Exclamation"
 2d_physics/layer_9="Vortex"
+2d_physics/layer_10="Spring"
 
 [rendering]
 

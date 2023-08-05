@@ -108,6 +108,10 @@ var _dash_direction := Vector2.ZERO
 var _shield:Shield = null
 ## ワープ座標リスト.
 var _warp_pos_list = []
+## バネ床との衝突数 (カウント方式).
+var _spring_cnt = 0
+## バネ床の移動量.
+var _spring_velocity := Vector2.ZERO
 
 # ---------------------------------
 # public functions.
@@ -126,19 +130,27 @@ func start_warp(pos_list:Array) -> void:
 		return # すでにワープ中なら何もしない.
 	# すでに複製されているのでそのままコピーで良い.
 	_warp_pos_list = pos_list
-	_move_state = eMoveState.WARP
+	_change_move_state(eMoveState.WARP)
 	
 ## バネ床開始.
 func start_spring() -> void:
-	if _move_state == eMoveState.SPRING:
-		return # すでに開始していたら何もしない.
-	_move_state = eMoveState.SPRING
+	_spring_cnt += 1
+	_change_move_state(eMoveState.SPRING)
 	
 ## バネ床終了.
-func end_sprint() -> void:
-	if _move_state != eMoveState.SPRING:
-		return # すでに終了していたら何もしない.
-	_move_state = eMoveState.AIR
+func end_spring() -> void:
+	_spring_cnt -= 1
+	if _spring_cnt > 0:
+		return
+		
+	_change_move_state(eMoveState.AIR)
+	_spring_cnt = 0
+	
+## バネ床移動量を設定.
+func set_spring_velocity(v:Vector2) -> void:
+	if _spring_velocity.is_zero_approx() == false:
+		return # すでに設定されていたら設定しない.
+	_spring_velocity = v
 
 ## 更新.
 func update(delta: float) -> void:
@@ -231,6 +243,9 @@ func _update_dead(delta:float) -> void:
 
 ## 着地した瞬間.
 func _just_landing(is_scale_anim:bool) -> void:
+	if _is_spring():
+		return # バネ床中は着地できない.
+	
 	if is_scale_anim:
 		# 着地演出.
 		_jump_scale = eJumpScale.LANDING
@@ -307,7 +322,7 @@ func _update_moving(delta:float) -> void:
 			# ジャンプ開始.
 			var is_wall_jump = _is_climbing_wall()
 			_start_jump(is_wall_jump)
-			_move_state = eMoveState.AIR
+			_change_move_state(eMoveState.AIR)
 		elif _check_dash():
 			# ダッシュ開始.
 			_start_dash()
@@ -381,7 +396,7 @@ func _start_jump(is_wall_jump:bool = false) -> void:
 			velocity.y = 0
 	
 	# 空中状態にする.
-	_move_state = eMoveState.AIR
+	_change_move_state(eMoveState.AIR)
 	
 	_jump_cnt += 1 # ジャンプ回数を増やす.
 	_jump_scale = eJumpScale.JUMPING
@@ -415,7 +430,7 @@ func _start_dash() -> void:
 	_timer_dash = DASH_TIME
 	
 	position.y -= 1 # 1px浮かす.
-	_move_state = eMoveState.AIR
+	_change_move_state(eMoveState.AIR)
 
 	# シールドを生成.
 	if is_instance_valid(_shield):
@@ -620,26 +635,26 @@ func _update_move_state(_delta:float) -> void:
 		eMoveState.GRABBING_LADDER:
 			if _can_grab_ladder() == false:
 				# はしごから離れた.
-				_move_state = eMoveState.AIR
+				_change_move_state(eMoveState.AIR)
 				velocity.y = 0
 			elif is_on_floor():
 				_move_state = eMoveState.LANDING
 		eMoveState.CLIMBING_WALL:
 			if _is_on_wall() == false:
 				# 壁から離れた.
-				_move_state = eMoveState.AIR
+				_change_move_state(eMoveState.AIR)
 		eMoveState.AIR:
 			if is_on_floor():
-				_move_state = eMoveState.LANDING
+				_change_move_state(eMoveState.LANDING)
 			elif _is_on_wall():
 				# 壁に掴まる.
 				Common.play_se("climb")
-				_move_state = eMoveState.CLIMBING_WALL
+				_change_move_state(eMoveState.CLIMBING_WALL)
 				# 着地 (着地アニメなし)
 				_just_landing(false)
 		eMoveState.LANDING:
 			if is_on_floor() == false:
-				_move_state = eMoveState.AIR
+				_change_move_state(eMoveState.AIR)
 		eMoveState.WARP:
 			# ワールド座標に変換する.
 			var target = Map.grid_to_world(_warp_pos_list[0])
@@ -650,23 +665,30 @@ func _update_move_state(_delta:float) -> void:
 			if d.length() < 1:
 				_warp_pos_list.pop_front()
 				if _warp_pos_list.size() == 0:
-					_move_state = eMoveState.AIR
+					_change_move_state(eMoveState.AIR)
 		eMoveState.SPRING:
 			# バネ床状態.
-			pass
+			velocity += _spring_velocity
+			_spring_velocity = Vector2.ZERO
 	
 	if _is_grabbing_ladder() == false:
 		# はしごチェック.
 		if _can_grab_ladder():
 			if Input.get_axis("ui_up", "ui_down") != 0:
 				# はしご開始.
-				_move_state = eMoveState.GRABBING_LADDER
+				_change_move_state(eMoveState.GRABBING_LADDER)
 				# 着地 (着地アニメなし)
 				_just_landing(false)
 	
 ## 着地しているかどうか.
 func is_landing() -> bool:
-	return _move_state == eMoveState.LANDING
+	match _move_state:
+		eMoveState.LANDING:
+			return true
+		eMoveState.SPRING:
+			return true # バネ床も着地扱いにしてみる.
+		_:
+			return false
 	
 ## 空中かどうか.
 func _is_in_the_air() -> bool:
@@ -740,6 +762,15 @@ func _is_add_gravity() -> bool:
 		_:
 			return true
 
+## 移動状態の変更.
+func _change_move_state(s:eMoveState) -> void:
+	if _move_state == s:
+		return # 変更なし.
+	
+	# 移動状態をprintする.
+	#print(eMoveState.keys()[_move_state], " -> ", eMoveState.keys()[s])
+	_move_state = s
+
 ## デバッグ用更新.
 func _update_debug() -> void:
 	_label.visible = true
@@ -767,3 +798,8 @@ var max_hp:int = 0:
 var center_position:Vector2:
 	get:
 		return _center.global_position
+		
+## 移動状態.
+var move_state:eMoveState:
+	get:
+		return _move_state

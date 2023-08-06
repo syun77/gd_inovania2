@@ -131,6 +131,7 @@ func start_warp(pos_list:Array) -> void:
 	# すでに複製されているのでそのままコピーで良い.
 	_warp_pos_list = pos_list
 	_change_move_state(eMoveState.WARP)
+	Common.play_se("warp")
 	
 ## バネ床開始.
 func start_spring() -> void:
@@ -143,6 +144,7 @@ func end_spring() -> void:
 	if _spring_cnt > 0:
 		return
 		
+	Common.play_se("spring")
 	_change_move_state(eMoveState.AIR)
 	_spring_cnt = 0
 	

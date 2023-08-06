@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://ct2b37bl633r0" path="res://assets/images/gimmick/exclamation_block.png" id="1_bxrni"]
 [ext_resource type="Script" path="res://src/gimmic/ExclamationBlock.gd" id="1_ov478"]
 [ext_resource type="Texture2D" uid="uid://b13cvj3mblcgo" path="res://assets/images/gimmick/exclamation_switch.png" id="2_vgfen"]
-[ext_resource type="Theme" uid="uid://d01v3grce8ivc" path="res://assets/fonts/MaruMinya.tres" id="4_x1b6o"]
+[ext_resource type="Theme" uid="uid://d01v3grce8ivc" path="res://assets/fonts/MaruMinya.tres" id="4_ry4na"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_my1x6"]
 size = Vector2(60, 60)
@@ -42,7 +42,7 @@ offset_left = -38.0
 offset_top = -31.0
 offset_right = 35.0
 offset_bottom = 28.0
-theme = ExtResource("4_x1b6o")
+theme = ExtResource("4_ry4na")
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 8
 text = "9"

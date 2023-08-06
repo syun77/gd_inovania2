@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://csqksxskdf5fu"]
 
 [ext_resource type="Script" path="res://src/gimmic/Wall.gd" id="1_8ifh4"]
-[ext_resource type="Texture2D" uid="uid://wj6o3e3o51m6" path="res://assets/images/gimmick/wall.png" id="1_r3sgy"]
+[ext_resource type="Texture2D" uid="uid://52cwa5nb8d6h" path="res://assets/images/gimmick/wall.png" id="1_r3sgy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t63f5"]
 size = Vector2(60, 60)

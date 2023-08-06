@@ -107,6 +107,7 @@ func _update_moving(delta:float) -> void:
 		_pos_list.pop_front()
 		if _pos_list.size() == 1:
 			# ゴールした.
+			Common.play_se("block")
 			position = Map.grid_to_world(_pos_list[0], false)
 			_pos_list.clear()
 			var p =ParticleUtil.add(global_position, ParticleUtil.eType.RECTLINE, 0, 0, 1.0, 0.5)

@@ -48,6 +48,11 @@ var _snd_tbl = {
 	"itemget2": "res://assets/sound/itemget2.wav",
 	"itemget": "res://assets/sound/itemget.wav",
 	"jump": "res://assets/sound/jump.wav",
+	"switch": "res://assets/sound/switch.wav",
+	"block": "res://assets/sound/block.wav",
+	"warp": "res://assets/sound/warp.wav",
+	"power_up": "res://assets/sound/powerup.wav",
+	"spring": "res://assets/sound/spring.wav",
 }
 
 var _slow_timer = 0.0 # スロータイマー.

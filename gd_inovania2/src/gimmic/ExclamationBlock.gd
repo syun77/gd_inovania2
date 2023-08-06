@@ -63,6 +63,7 @@ func _process(delta: float) -> void:
 		eState.NOT_PRESS:
 			if pressed:
 				# スイッチを踏んだ.
+				Common.play_se("switch")
 				_create_blocks()
 		eState.PRESS:
 			if pressed == false:
@@ -70,12 +71,13 @@ func _process(delta: float) -> void:
 				_state = eState.PRESS_TO_RELEASE
 				_count_timer = TIMER_COUNT_DOWN
 		eState.PRESS_TO_RELEASE:
-			_count_timer -= delta
-			if _count_timer < 0:
-				_count_timer = 0
 			if pressed:
 				# 再び押したらカウントやり直し.
+				if _count_timer != TIMER_COUNT_DOWN:
+					Common.play_se("switch", 4)
 				_count_timer = TIMER_COUNT_DOWN
+			else:
+				_count_timer -= delta
 			
 			if _count_timer <= 0:
 				# 時間切れ.

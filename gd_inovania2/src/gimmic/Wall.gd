@@ -29,6 +29,7 @@ enum eState {
 # -------------------------------------------------------------
 @onready var _spr = $Sprite2D
 @onready var _collision = $CollisionShape2D
+@onready var _label = $Label
 
 # -------------------------------------------------------------
 # var.
@@ -46,6 +47,8 @@ var _timer = 0.0
 var _moving_timer = 0.0
 ## 移動リスト.
 var _pos_list = []
+## 表示する数字.
+var _number:int = 0
 
 # -------------------------------------------------------------
 # public functions.
@@ -56,6 +59,11 @@ func setup_moving(pos_list:Array) -> void:
 	_pos_list = pos_list
 	position = Map.grid_to_world(_pos_list[0], false)
 	_spr.frame = _mode
+	
+## 数字を設定する.
+func set_number(n:int) -> void:
+	if _state == eState.MAIN:
+		_number = n
 
 ## 消滅.
 func vanish() -> void:
@@ -83,10 +91,17 @@ func _process(delta: float) -> void:
 
 ## 更新 > メイン.
 func _update_main(_delta:float) -> void:
-	pass
+	if _number > 0:
+		# 数字を表示する.
+		_label.visible = true
+		_label.text = "%d"%_number
+		_number = 0
+	else:
+		_label.visible = false
 
 ## 更新 > 消滅.
 func _update_vanish(delta:float) -> void:
+	_label.visible = false
 	_timer -= delta
 	if _timer < 0.0:
 		queue_free()

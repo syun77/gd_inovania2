@@ -12,7 +12,7 @@ const WALL_OBJ = preload("res://src/gimmic/Wall.tscn")
 # -------------------------------------------------------------
 # const.
 # -------------------------------------------------------------
-const TIMER_COUNT_DOWN = 3.0
+const TIMER_COUNT_DOWN = 4.0 # ブロック消滅までの時間.
 
 enum eState {
 	NOT_PRESS, # 押していない.
@@ -96,9 +96,14 @@ func _update_anim() -> void:
 		_spr.frame = 1
 		_spr_switch.frame = 1
 		if _state == eState.PRESS_TO_RELEASE:
-			_label_number.visible = true
 			var count = int(_count_timer) + 1
 			_label_number.text = "%d"%count
+			if _is_pressed_switch() == false:
+				# 踏んでいなければ数字を表示する.
+				_label_number.visible = true
+				for wall in _walls.get_children():
+					wall.set_number(count)
+				
 	
 ## スイッチを踏んでいるかどうか.
 func _is_pressed_switch() -> bool:

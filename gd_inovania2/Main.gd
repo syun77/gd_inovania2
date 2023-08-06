@@ -304,11 +304,11 @@ func _update_debug() -> void:
 		# リセット.
 		get_tree().change_scene_to_file("res://Main.tscn")
 	
-	_dbg_label.visible = true
-	var cnt = 0
-	for obj in _bg_layer.get_children():
-		# 落下床をカウントする.
-		if not obj is FallingFloor:
-			continue
-		cnt += 1
-	_dbg_label.text = "FallingFloor:%d"%cnt
+	#_dbg_label.visible = true
+	#var cnt = 0
+	#for obj in _bg_layer.get_children():
+	#	# 落下床をカウントする.
+	#	if not obj is FallingFloor:
+	#		continue
+	#	cnt += 1
+	#_dbg_label.text = "FallingFloor:%d"%cnt

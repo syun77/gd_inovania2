@@ -22,7 +22,7 @@ layer_0/tile_data = PackedInt32Array(0, 65536, 0, 1, 65536, 0, 2, 65536, 0, 3, 6
 follow_viewport_enabled = true
 
 [node name="Player" parent="MainLayer" instance=ExtResource("2_cqxvx")]
-position = Vector2(5416, 1536)
+position = Vector2(832, 1440)
 
 [node name="ParticleLayer" type="CanvasLayer" parent="."]
 follow_viewport_enabled = true

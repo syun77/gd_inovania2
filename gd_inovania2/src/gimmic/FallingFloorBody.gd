@@ -54,6 +54,7 @@ func _physics_process(delta: float) -> void:
 		if velocity.y > MAX_SPEED:
 			velocity.y = MAX_SPEED
 		
+		# 上にプレイヤーがいたら位置を調整する.
 		var col = move_and_collide(velocity * delta)
 		_fit_player(col, delta)
 		
@@ -68,5 +69,6 @@ func _fit_player(col:KinematicCollision2D, delta:float) -> void:
 		return
 	var collider = col.get_collider()
 	if collider is Player:
+		# 対象はプレイヤーのみ.
 		var player = collider as Player
 		player.position.y += velocity.y * delta

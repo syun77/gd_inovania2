@@ -223,6 +223,7 @@ func _update_main(delta:float) -> void:
 	if is_landing():
 		_set_fall_through(false) # 着地したら飛び降り終了.
 	
+	# コリジョン後処理.
 	_update_collision_post()
 	
 ## 更新 > 死亡.
@@ -304,7 +305,7 @@ func _update_moving(delta:float) -> void:
 	
 	if _is_add_gravity():
 		# move_and_slide()で足元のタイルを判定したいので
-		# 常に重力を加算.
+		# 着地していても重力を加算.
 		velocity.y += _config.gravity
 	
 	var can_move = true
@@ -313,7 +314,7 @@ func _update_moving(delta:float) -> void:
 		var v = Input.get_axis("ui_up", "ui_down")
 		velocity.y = 0
 		if v != 0:
-			velocity.x = 0 # X方向を止める.
+			velocity.x = 0 # ハシゴ移動中はX移動を止める.
 			if _can_climb(v):
 				velocity.y = _config.ladder_move_speed * v
 		if _is_climbing_wall():
@@ -796,7 +797,7 @@ var max_hp:int = 0:
 		return max_hp
 	set(v):
 		max_hp = v
-## 通信座標.
+## 中心座標.
 var center_position:Vector2:
 	get:
 		return _center.global_position

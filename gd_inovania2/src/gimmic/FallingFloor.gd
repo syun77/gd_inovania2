@@ -1,6 +1,8 @@
 extends Node2D
 # =============================================
 # 落下床.
+# @note このモジュールは出現タイミングの管理をするのみ.
+#       実体は $FallingFloorBody
 # =============================================
 class_name FallingFloor
 
@@ -27,5 +29,5 @@ class_name FallingFloor
 ## 更新.
 func _physics_process(_delta: float) -> void:
 	if _floor.is_hide():
-		# 隠れたら出現させる
+		# 隠れたら初期位置に出現させる
 		_floor.appear(Vector2.ZERO)

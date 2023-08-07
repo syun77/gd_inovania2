@@ -42,20 +42,20 @@ var _bgm_tbl = {
 var _snds:Array = []
 ### SEテーブル.
 var _snd_tbl = {
+	"block": "res://assets/sound/block.wav",
 	"broken": "res://assets/sound/broken.wav",
 	"climb": "res://assets/sound/climb.wav",
 	"dash": "res://assets/sound/dash.wav",
 	"itemget2": "res://assets/sound/itemget2.wav",
 	"itemget": "res://assets/sound/itemget.wav",
 	"jump": "res://assets/sound/jump.wav",
-	"switch": "res://assets/sound/switch.wav",
-	"block": "res://assets/sound/block.wav",
-	"warp": "res://assets/sound/warp.wav",
 	"power_up": "res://assets/sound/powerup.wav",
+	"switch": "res://assets/sound/switch.wav",
 	"spring": "res://assets/sound/spring.wav",
+	"warp": "res://assets/sound/warp.wav",
 }
 
-var _slow_timer = 0.0 # スロータイマー.
+var _slow_timer = 0.0 # スロータイマー (未実装).
 var _slow_rate = 1.0 # スロー時の経過時間倍率.
 var _hit_stop_timer = 0.0 # ヒットストップタイマー.
 
@@ -73,7 +73,9 @@ func get_collision_bit(bit:eCollisionLayer) -> int:
 ## 初期化.
 func init() -> void:
 	if _initialized == false:
-		# BGM.
+		# 未初期化なので初期化する.
+		# 常駐することでシーンの切り替わりでもBGMが途切れない.
+		## BGM.
 		if _bgm == null:
 			_bgm = AudioStreamPlayer.new()
 			add_child(_bgm)
@@ -109,8 +111,9 @@ func setup(layers, player:Player, camera:Camera2D) -> void:
 
 ## 更新.
 func update(delta:float) -> void:
+	# 各種タイマー更新.
 	if _slow_timer > 0.0:
-		_slow_timer -= delta
+		_slow_timer -= delta # スロー再生 (未実装)
 	if _hit_stop_timer > 0.0:
 		_hit_stop_timer -= delta
 	if _shake_timer > 0.0:
@@ -144,18 +147,19 @@ func is_in_camera(pos:Vector2, size:float, expand_ratio:float=1.0) -> bool:
 		return true
 	return false
 	
-## スロー開始.
+## スロー開始 (TODO:未実装)
 func start_slow(time:float, rate:float) -> void:
 	_slow_timer = time
 	_slow_rate = rate
 
-## スロー再生係数.
+## スロー再生係数 (TODO:未実装)
 func get_slow_rate() -> float:
 	if _slow_timer > 0:
 		return _slow_rate
 	return 1.0
 	
 ## ヒットストップ開始.
+## @param 停止するフレーム数 (※秒数ではない)
 func start_hit_stop(frame:int=3) -> void:
 	_hit_stop_timer = FPS_RATE * frame
 
@@ -164,22 +168,27 @@ func is_hit_stop() -> bool:
 	return _hit_stop_timer > 0.0
 	
 ## 揺れ開始.
+## @param intensity 揺れの強さ.
+## @param time 揺れが収まるまでの時間 (秒).
 func start_camera_shake(intensity:float=1.0, time:float=1.0) -> void:
 	_shake_intensity = intensity
 	_shake_timer = time
 	if time > 0.0:
 		_shake_max_timer = time
 
-## 揺れの値を取得する.
+## 揺れの割合を取得する.
 func get_camera_shake_rate() -> float:
 	if _shake_timer <= 0.0:
 		return 0.0
 	
 	return _shake_timer / _shake_max_timer
+## 揺れの強さを取得する.
 func get_camera_shake_intensity() -> float:
 	return _shake_intensity
 
 ## BGMの再生.
+## @note _bgm_tblに事前登録が必要.
+## @param 再生するBGMの名前
 func play_bgm(key:String) -> void:
 	if not key in _bgm_tbl:
 		push_error("存在しないサウンド %s"%key)
@@ -192,6 +201,8 @@ func stop_bgm() -> void:
 	_bgm.stop()
 
 ## SEの再生.
+## @note _sndsに事前登録が必要.
+## @param 再生するSEの名前
 func play_se(key:String, id:int=0) -> void:
 	if id < 0 or MAX_SOUND <= id:
 		push_error("不正なサウンドID %d"%id)

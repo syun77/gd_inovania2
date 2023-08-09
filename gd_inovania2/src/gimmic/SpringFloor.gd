@@ -27,21 +27,25 @@ func _physics_process(delta: float) -> void:
 		return # プレイヤー領域内にいないので何もしない.
 	
 	# バネで押し返す.
-	var d = position.y - _player.position.y
-	var size = Map.get_tile_size()
-	d += size / 2.0
+	## バネの底とプレイヤーの位置との差を求めて弾力を求める.
+	var size = Map.get_tile_size() # 1タイルあたりのサイズ.
+	var bottom = position.y + (size / 2.0) # 基準位置を底に移動.
+	var d = bottom - _player.position.y
 	if d <= 0:
 		d = 0 # 最大の力.
-		
+	
+	## 正規化.
 	var damp_rate = 1.0 * (size - d) / size
+	
+	## バネの見た目を伸縮する.
 	_spr.scale.y = 1 - damp_rate
 	if _spr.scale.y < 0.2:
 		_spr.scale.y = 0.2
-	if damp_rate == 0.3 and _player.velocity.y > 0:
-		_player.velocity.y *= 0.1
+	# 弾力補正値.
 	damp_rate += 0.5
 	if Input.is_action_pressed("action"):
-		damp_rate *= 2.0 # バネジャンプ.
+		# ジャンプボタンを押していたら弾力を2倍にする.
+		damp_rate *= 2.0
 	
 	# バネ速度を設定.
 	var damp_velocity = Vector2.UP * (POWER * damp_rate * delta)

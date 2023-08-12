@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://hfcjfcxbvhnn"]
 
-[ext_resource type="Texture2D" uid="uid://ct2b37bl633r0" path="res://assets/images/gimmick/exclamation_block.png" id="1_bxrni"]
+[ext_resource type="Texture2D" uid="uid://c6jr5cp0nlxtb" path="res://assets/images/gimmick/exclamation_block.png" id="1_bxrni"]
 [ext_resource type="Script" path="res://src/gimmic/ExclamationBlock.gd" id="1_ov478"]
-[ext_resource type="Texture2D" uid="uid://b13cvj3mblcgo" path="res://assets/images/gimmick/exclamation_switch.png" id="2_vgfen"]
+[ext_resource type="Texture2D" uid="uid://ckjic7pn0ogch" path="res://assets/images/gimmick/exclamation_switch.png" id="2_vgfen"]
 [ext_resource type="Theme" uid="uid://d01v3grce8ivc" path="res://assets/fonts/MaruMinya.tres" id="4_ry4na"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_my1x6"]

@@ -115,11 +115,15 @@ func _update_vanish(delta:float) -> void:
 
 ## 移動の更新.
 func _update_moving(delta:float) -> void:
+	# 移動タイマー経過.
 	_moving_timer += delta
 	
+	# タイマーを正規化.
 	var rate = _moving_timer / MOVING_TIMER
+	# イージングで動かす.
 	rate = Ease.cube_out(rate)
 	if rate >= 1.0:
+		# 次の地点に到達した.
 		_moving_timer = 0.0
 		rate = 0.0
 		_pos_list.pop_front()
@@ -128,11 +132,15 @@ func _update_moving(delta:float) -> void:
 			Common.play_se("block")
 			position = Map.grid_to_world(_pos_list[0], false)
 			_pos_list.clear()
+			# 四角エフェクトの発生.
 			var p =ParticleUtil.add(global_position, ParticleUtil.eType.RECTLINE, 0, 0, 1.0, 0.5)
 			p.color = Color.CHOCOLATE
 			return
 	
+	# _pos_list[0]から[1]へ lerp で動かす.
 	var a = Vector2(_pos_list[0])
 	var b  = Vector2(_pos_list[1])
 	a = a.lerp(b, rate)
+	# マップ座標系をワールド座標に変換.
+	# 親オブジェクトにぶら下がっている (親からの相対座標) のでこれで良い.
 	position = Map.grid_to_world(a, false)

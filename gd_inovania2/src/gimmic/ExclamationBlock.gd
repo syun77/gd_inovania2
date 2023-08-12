@@ -127,9 +127,11 @@ func _create_blocks() -> void:
 	var idx = 1
 	for grid_pos in _pos_list:
 		var wall = WALL_OBJ.instantiate()
+		# 「！ブロック」からの移動経路を作る.
 		var p_list = [base]
 		for i in range(idx):
 			p_list.append(_pos_list[i])
+		# 後で消すために "Walls"ノードに登録.
 		_walls.add_child(wall)
 		wall.setup_moving(p_list)
 		

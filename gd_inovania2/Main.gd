@@ -257,13 +257,15 @@ func _create_vortex_warp(i:int, j:int) -> void:
 	# 終端用のワープ渦巻きを作っておく.
 	var pos_list2 = pos_list.duplicate() # 複製.
 	# 終端を取得.
-	var end_pos = pos_list2.pop_back()
+	var end_pos = pos_list2.back()
 	# 終端が開始.
 	var p2 = p + end_pos
 	var vortex2 = VORTEX_OBJ.instantiate()
 	# 逆順にする.
 	pos_list2.reverse()
 	pos_list2 = pos_list2.map(func(a): return a-end_pos) # end_pos基準に変換.
+	#print("--------------")
+	#print(pos_list)
 	#print(pos_list2)
 	_bg_layer.add_child(vortex2)
 	vortex2.setup(p2, pos_list2, 8)
